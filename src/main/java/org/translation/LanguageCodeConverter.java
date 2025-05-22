@@ -12,7 +12,8 @@ import java.util.Map;
  * This class provides the service of converting language codes to their names.
  */
 public class LanguageCodeConverter {
-
+    private final Map<String, String> codeToLanguage = new HashMap<>();
+    private final Map<String, String> languageToCode = new HashMap<>();
     // TODO Task: pick appropriate instance variables to store the data necessary for this class
 
     /**
@@ -34,6 +35,15 @@ public class LanguageCodeConverter {
             List<String> lines = Files.readAllLines(Paths.get(getClass()
                     .getClassLoader().getResource(filename).toURI()));
 
+            for (String line : lines) {
+                String[] parts = line.split(",");
+                if (parts.length == 2) {
+                    String code = parts[0].trim();
+                    String language = parts[1].trim();
+                    codeToLanguage.put(code, language);
+                    languageToCode.put(language, code);
+                }
+            }
             // TODO Task: use lines to populate the instance variable
             //           tip: you might find it convenient to create an iterator using lines.iterator()
 
@@ -51,7 +61,7 @@ public class LanguageCodeConverter {
      */
     public String fromLanguageCode(String code) {
         // TODO Task: update this code to use your instance variable to return the correct value
-        return code;
+        return codeToLanguage.getOrDefault(code, "Unknown");
     }
 
     /**
@@ -61,7 +71,7 @@ public class LanguageCodeConverter {
      */
     public String fromLanguage(String language) {
         // TODO Task: update this code to use your instance variable to return the correct value
-        return language;
+        return languageToCode.getOrDefault(language, "Unknown");
     }
 
     /**
@@ -70,6 +80,6 @@ public class LanguageCodeConverter {
      */
     public int getNumLanguages() {
         // TODO Task: update this code to use your instance variable to return the correct value
-        return 0;
+        return codeToLanguage.size();
     }
 }
