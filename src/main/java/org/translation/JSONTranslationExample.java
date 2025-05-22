@@ -3,6 +3,7 @@ package org.translation;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.json.JSONArray;
@@ -21,9 +22,10 @@ public class JSONTranslationExample {
         try {
             // this next line of code reads in a file from the resources folder as a String,
             // which we then create a new JSONArray object from.
-            // TODO CheckStyle: Line is longer than 120 characters
+            // TO-DO CheckStyle: Line is longer than 120 characters
             //                  (note: you can split a line such that the next line starts with a .method()... call
-            String jsonString = Files.readString(Paths.get(getClass().getClassLoader().getResource("sample.json").toURI()));
+            Path path = Paths.get(getClass().getClassLoader().getResource("sample.json").toURI());
+            String jsonString = Files.readString(path);
             this.jsonArray = new JSONArray(jsonString);
         }
         catch (IOException | URISyntaxException ex) {
@@ -37,12 +39,12 @@ public class JSONTranslationExample {
      */
     public String getCanadaCountryNameSpanishTranslation() {
 
-        // TODO Checkstyle: '30' is a magic number.
-        JSONObject canada = jsonArray.getJSONObject(30);
+        // TO-DO Checkstyle: '30' is a magic number.
+        JSONObject canada = jsonArray.getJSONObject(CANADA_INDEX);
         return canada.getString("es");
     }
 
-    // TODO Task: Complete the method below to generalize the above to get the country name
+    // TO-DO Task: Complete the method below to generalize the above to get the country name
     //            for any country code and language code from sample.json.
 
     /**
@@ -52,6 +54,15 @@ public class JSONTranslationExample {
      * @return the translation of country to the given language or "Country not found" if there is no translation.
      */
     public String getCountryNameTranslation(String countryCode, String languageCode) {
+        for (int i = 0; i < jsonArray.length(); i++) {
+            JSONObject obj = jsonArray.getJSONObject(i);
+            if (obj.get("alpha3").equals(countryCode)) {
+                Object t = obj.get(languageCode);
+                if (t != null) {
+                    return (String) t;
+                }
+            }
+        }
         return "Country not found";
     }
 
