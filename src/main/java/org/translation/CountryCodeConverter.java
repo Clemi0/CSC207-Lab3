@@ -5,17 +5,17 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
-// TODO CheckStyle: Wrong lexicographical order for 'java.util.HashMap' import (remove this comment once resolved)
-import java.util.HashMap;
-import java.util.Map;
+// TO-DO CheckStyle: Wrong lexicographical order for 'java.util.HashMap' import (remove this comment once resolved)
 
 /**
  * This class provides the service of converting country codes to their names.
  */
 public class CountryCodeConverter {
+    private final List<String> data;
+    private final int deltaCode = 4;
+    private final int lenCode = 3;
 
-    // TODO Task: pick appropriate instance variable(s) to store the data necessary for this class
-
+    // TO-DO Task: pick appropriate instance variable(s) to store the data necessary for this class
     /**
      * Default constructor which will load the country codes from "country-codes.txt"
      * in the resources folder.
@@ -32,10 +32,9 @@ public class CountryCodeConverter {
     public CountryCodeConverter(String filename) {
 
         try {
-            List<String> lines = Files.readAllLines(Paths.get(getClass()
+            this.data = Files.readAllLines(Paths.get(getClass()
                     .getClassLoader().getResource(filename).toURI()));
-
-            // TODO Task: use lines to populate the instance variable(s)
+            // TO-DO Task: use lines to populate the instance variable(s)
 
         }
         catch (IOException | URISyntaxException ex) {
@@ -50,7 +49,19 @@ public class CountryCodeConverter {
      * @return the name of the country corresponding to the code
      */
     public String fromCountryCode(String code) {
-        // TODO Task: update this code to use an instance variable to return the correct value
+        // TO-DO Task: update this code to use an instance variable to return the correct value
+        String ode = code.toUpperCase();
+        for (String line: this.data) {
+            if (line.contains(ode)) {
+                int i = line.lastIndexOf(ode);
+                char[] c = line.toCharArray();
+                StringBuilder s = new StringBuilder();
+                for (int j = 0; j < i - deltaCode; j++) {
+                    s.append(c[j]);
+                }
+                return s.toString();
+            }
+        }
         return code;
     }
 
@@ -60,7 +71,17 @@ public class CountryCodeConverter {
      * @return the 3-letter code of the country
      */
     public String fromCountry(String country) {
-        // TODO Task: update this code to use an instance variable to return the correct value
+        // TO-DO Task: update this code to use an instance variable to return the correct value
+        for (String line: this.data) {
+            if (line.startsWith(country)) {
+                char[] c = line.toCharArray();
+                StringBuilder s = new StringBuilder();
+                for (int j = 0; j < lenCode; j++) {
+                    s.append(c[country.length() + deltaCode + j]);
+                }
+                return s.toString().toLowerCase();
+            }
+        }
         return country;
     }
 
@@ -69,7 +90,7 @@ public class CountryCodeConverter {
      * @return how many countries are included in this code converter.
      */
     public int getNumCountries() {
-        // TODO Task: update this code to use an instance variable to return the correct value
-        return 0;
+        // TO-DO Task: update this code to use an instance variable to return the correct value
+        return this.data.size() - 1;
     }
 }
