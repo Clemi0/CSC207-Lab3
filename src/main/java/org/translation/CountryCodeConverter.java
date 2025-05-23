@@ -35,7 +35,7 @@ public class CountryCodeConverter {
             this.data = Files.readAllLines(Paths.get(getClass()
                     .getClassLoader().getResource(filename).toURI()));
             // TO-DO Task: use lines to populate the instance variable(s)
-
+            this.data.remove(0);
         }
         catch (IOException | URISyntaxException ex) {
             throw new RuntimeException(ex);
@@ -91,6 +91,6 @@ public class CountryCodeConverter {
      */
     public int getNumCountries() {
         // TO-DO Task: update this code to use an instance variable to return the correct value
-        return this.data.size() - 1;
+        return this.data.size();
     }
 }

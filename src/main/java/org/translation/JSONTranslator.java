@@ -93,4 +93,20 @@ public class JSONTranslator implements Translator {
         }
         return null;
     }
+
+    /**
+     * Gets the 2 length code from the 3 length country code.
+     * @param country the 3 letter country code
+     * @return the 2 letter country code
+     */
+    public final String getAlpha(String country) {
+        // TO-DO Task: complete this method using your instance variables as needed
+        for (int i = 0; i < this.jsonArray.length(); i++) {
+            JSONObject obj = this.jsonArray.getJSONObject(i);
+            if (obj.getString("alpha3").equals(country)) {
+                return obj.getString(obj.getString("alpha2"));
+            }
+        }
+        return null;
+    }
 }

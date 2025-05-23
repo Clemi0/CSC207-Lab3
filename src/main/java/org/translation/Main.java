@@ -1,6 +1,7 @@
 package org.translation;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
@@ -14,7 +15,6 @@ import java.util.Scanner;
  * - at any time, the user can type quit to quit the program<br/>
  */
 public class Main {
-
     /**
      * This is the main entry point of our Translation System!<br/>
      * A class implementing the Translator interface is created and passed into a call to runProgram.
@@ -22,11 +22,11 @@ public class Main {
      */
     public static void main(String[] args) {
 
-        // TODO Task: once you finish the JSONTranslator,
+        // TO-DO Task: once you finish the JSONTranslator,
         //            you can use it here instead of the InLabByHandTranslator
         //            to try out the whole program!
-        // Translator translator = new JSONTranslator(null);
-        Translator translator = new InLabByHandTranslator();
+        Translator translator = new JSONTranslator();
+        // Translator translator = new InLabByHandTranslator();
 
         runProgram(translator);
     }
@@ -71,6 +71,8 @@ public class Main {
 
     // Note: CheckStyle is configured so that we don't need javadoc for private methods
     private static String promptForCountry(Translator translator) {
+        CountryCodeConverter countrycode = new CountryCodeConverter();
+        LanguageCodeConverter languagecode = new LanguageCodeConverter();
         List<String> countries = translator.getCountries();
         // TO-DO Task: replace the following println call, sort the countries alphabetically,
         //            and print them out; one per line
@@ -78,9 +80,12 @@ public class Main {
         // TO-DO Task: convert the country codes to the actual country names before sorting
         List<String> nlist = new ArrayList<>();
         for (String count : countries) {
-            nlist.add(translator.translate(count, "en"));
+            String code = countrycode.fromCountry(count);
+            System.out.println(code);
+            nlist.add(translator.translate(count, code));
         }
-        nlist.sort(null);
+        System.out.println(nlist);
+        nlist.sort(String.CASE_INSENSITIVE_ORDER);
         System.out.println(nlist);
 
         System.out.println("select a country from above:");
@@ -92,10 +97,11 @@ public class Main {
 
     // Note: CheckStyle is configured so that we don't need javadoc for private methods
     private static String promptForLanguage(Translator translator, String country) {
+        CountryCodeConverter countrycode = new CountryCodeConverter();
         List<String> countries = translator.getCountries();
         String coun = null;
         for (String count : countries) {
-            if (country.equals(translator.translate(count, "en"))) {
+            if (country.equals(translator.translate(count, countrycode.fromCountry(count)))) {
                 coun = count;
                 break;
             }
@@ -109,7 +115,7 @@ public class Main {
         for (String lan: list) {
             nlist.add(translator.translate(coun, lan));
         }
-        nlist.sort(null);
+        nlist.sort(String.CASE_INSENSITIVE_ORDER);
         System.out.println(nlist);
 
         System.out.println("select a language from above:");
